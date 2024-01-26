@@ -1,0 +1,60 @@
+NEURON -> ADJ LIST:
+creatures are going to be represented by an adjacency list of neurons
+Essentially, index i of the list is a neuron, and the value at index i is a list of neurons that it is connected to
+
+CREATURES:
+Three layers of network: input (sensory nodes), internal and output (motor nodes).
+Creatures are born with a set of input neurons that produce a floating point value between 0 and 1.
+This then multiplied by some small floating point number in a small range between (-4, 4) and then passed to the internal layer.
+Each of the internal neurons will sum up each of the incoming connections and it will take that sum, positive or negative, and run it through a hyperbolic tangent function to produce a number between -1 and 1.
+Each of the output neurons will, likewise, sum up each of the incoming connections and run it through a hyperbolic tangent function to produce a number between -1 and 1 and this will determine whether this action neuron will fire or not.
+For example, if the output neuron (after the hyperbolic tangent function) is > 0, then the floating point number will be interpreted as a probability of it firing.
+
+INTERNAL LAYER:
+Also an adjacency list. 
+At each adj[i] is a list [0-26] of sensory inputs connected and a list [0-8] of motor outputs connected.
+
+SENSORY INPUTS (* if need to be queried from environment)
+0: Fat = food at location *
+1: Fdf = food density forward * 
+2: Fdr = food density right *
+3: Fdl = food density left *
+4: Fdb = food density backward *
+5: Age = age 
+6: Rnd = random input
+7: Ene = energy/fitness
+8: Clf = creature left *
+9: Clr = creature right *
+10: Cfd = creature forward * 
+11: Cbd = creature backward *
+12: Plf = population density left *
+13: Prt = population density right *
+14: Pfd = population density forward *
+15: Pbd = population density backward *
+16: LMy = last movement Y
+17: LMx = last movement X
+18: BDy = north/south border distance *
+19: BDx = east/west border distance *
+20: BD = nearest border distance *
+21: GNF = genetic similarity of fwd neighbor * (query environment for agent object, query self for comparison with other agent as param)
+22: GNB = genetic similarity of bwd neighbor *
+23: GNL = genetic similarity of left neighbor *
+24: GNR = genetic similarity of right neighbor *
+25: INW = input weight (input * INW = internal layer -> between -4 and 4)
+26: OTW = output weight (internal * OTW = output layer -> between -4 and 4)
+
+ACTION OUTPUTS
+0: Eat = Consume at location (if food is present)
+1: Rpd = Attempt to reproduce with fwd neighbour
+2: Kill = kill fwd neighbor
+3: Mfd = move forward
+4: Mrn move random
+5: Mrv = move reverse
+6: MRL = move left/right (+/-)
+7: MX = move east/west (+/-)
+8: MY = move north/south (+/-)
+
+RESTRICTIONS FOR REPRODUCTION:
+- fitness >= 3
+- genetic similarity > 0.8
+- age > 10
